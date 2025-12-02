@@ -34,6 +34,17 @@ GNU General Public License for more details.
 #define LIGHT_INTERP_UPDATE	0.1f
 #define LIGHT_INTERP_FACTOR	(1.0f / LIGHT_INTERP_UPDATE)
 
+struct SkinningBlock_BonesArray
+{
+	Vector4D m_BonesArray[MAXSTUDIOBONES * 3];
+};
+
+struct SkinningBlock_QuatPos
+{
+	Vector4D m_BoneQuaternion[MAXSTUDIOBONES];
+	Vector4D m_BonePosition[MAXSTUDIOBONES];
+};
+
 /*
 =================
 SortSolidMeshes
@@ -3378,6 +3389,47 @@ void CStudioModelRenderer :: DrawSingleMesh( CSolidEntry *entry, bool force, boo
 		return;
 	}
 
+	bool s_useUBO = CVAR_TO_BOOL(r_ubo_skinning);
+
+	if (s_useUBO)
+	{
+		pglBindBufferARB(GL_UNIFORM_BUFFER, g_skinningUBO);
+
+		if (num_bones <= 128)
+		{
+			SkinningBlock_BonesArray* pBonesArray = (SkinningBlock_BonesArray*)pglMapBufferARB(GL_UNIFORM_BUFFER, GL_WRITE_ONLY_ARB);
+			if (pBonesArray)
+			{
+				if (weapon_model)
+					memcpy(pBonesArray->m_BonesArray, &inst->m_glweaponbones[0][0], num_bones * 3 * sizeof(Vector4D));
+				else
+					memcpy(pBonesArray->m_BonesArray, &inst->m_glstudiobones[0][0], num_bones * 3 * sizeof(Vector4D));
+
+				pglUnmapBufferARB(GL_UNIFORM_BUFFER);
+			}
+		}
+		else
+		{
+			SkinningBlock_QuatPos* pQuatPos = (SkinningBlock_QuatPos*)pglMapBufferARB(GL_UNIFORM_BUFFER, GL_WRITE_ONLY_ARB);
+			if (pQuatPos)
+			{
+				if (weapon_model)
+					memcpy(pQuatPos->m_BoneQuaternion, &inst->m_weaponquat[0][0], num_bones * sizeof(Vector4D));
+				else
+					memcpy(pQuatPos->m_BoneQuaternion, &inst->m_studioquat[0][0], num_bones * sizeof(Vector4D));
+
+				if (weapon_model)
+					memcpy(pQuatPos->m_BonePosition, &inst->m_weaponpos[0][0], num_bones * sizeof(Vector4D));
+				else
+					memcpy(pQuatPos->m_BonePosition, &inst->m_studiopos[0][0], num_bones * sizeof(Vector4D));
+
+				pglUnmapBufferARB(GL_UNIFORM_BUFFER);
+			}
+		}
+
+		pglBindBufferBase(GL_UNIFORM_BUFFER, UBT_SKINNINGBLOCK, g_skinningUBO);
+	}
+
 	// setup specified uniforms (and texture bindings)
 	for( int i = 0; i < shader->numUniforms; i++ )
 	{
@@ -3495,16 +3547,19 @@ void CStudioModelRenderer :: DrawSingleMesh( CSolidEntry *entry, bool force, boo
 			u->SetValue( &inst->m_glmatrix[0] );
 			break;
 		case UT_BONESARRAY:
+			if( s_useUBO ) break;
 			if( weapon_model )
 				u->SetValue( &inst->m_glweaponbones[0][0], num_bones * 3 );
 			else u->SetValue( &inst->m_glstudiobones[0][0], num_bones * 3 );
 			break;
 		case UT_BONEQUATERNION:
+			if( s_useUBO ) break;
 			if( weapon_model )
 				u->SetValue( &inst->m_weaponquat[0][0], num_bones );
 			else u->SetValue( &inst->m_studioquat[0][0], num_bones );
 			break;
 		case UT_BONEPOSITION:
+			if( s_useUBO ) break;
 			if( weapon_model )
 				u->SetValue( &inst->m_weaponpos[0][0], num_bones );
 			else u->SetValue( &inst->m_studiopos[0][0], num_bones );

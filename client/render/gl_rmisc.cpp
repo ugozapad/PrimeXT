@@ -920,6 +920,11 @@ void R_VidInit( void )
 	R_InitCommonTextures();
 	R_InitCubemapShaders();
 
+	pglGenBuffersARB(1, &g_skinningUBO);
+	pglBindBufferARB(GL_UNIFORM_BUFFER, g_skinningUBO);
+	pglBufferDataARB(GL_UNIFORM_BUFFER, sizeof(Vector4D) * 4 * MAXSTUDIOBONES * 3, nullptr, GL_DYNAMIC_DRAW_ARB);
+	pglBindBufferARB(GL_UNIFORM_BUFFER, 0);
+
 	if (CVAR_TO_BOOL(gl_hdr)) {
 		GL_VidInitTempScreenFBO();
 	}

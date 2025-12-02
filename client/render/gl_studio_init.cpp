@@ -33,6 +33,8 @@ GNU General Public License for more details.
 #include <vector>
 #include <algorithm>
 
+GLuint g_skinningUBO = 0;
+
 // Global engine <-> studio model rendering code interface
 engine_studio_api_t IEngineStudio;
 

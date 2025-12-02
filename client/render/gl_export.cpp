@@ -233,6 +233,7 @@ static dllfunc_t opengl_310funcs[] =
 {
 { "glGetUniformBlockIndex"		, (void **)&pglGetUniformBlockIndex },
 { "glUniformBlockBinding"		, (void **)&pglUniformBlockBinding },
+{ "glBindBufferBase"			, (void **)&pglBindBufferBase },
 { NULL, NULL }
 };
 

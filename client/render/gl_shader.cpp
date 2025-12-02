@@ -313,6 +313,13 @@ static uniformTable_t glsl_uniformTable[] =
 { "u_Undefined",		UT_UNDEFINED,		0 },
 };
 
+
+// Uniform Block
+static const char* glsl_uniform_block_names[UBT_MAX] =
+{
+	"SkinningBlock"
+};
+
 static char *GL_PrintShaderInfoLog( GLhandleARB shader )
 {
 	static char	msg[32768];
@@ -716,6 +723,7 @@ static bool GL_ProcessShader( glsl_program_t *program, const char *filename, GLe
 
 	// add internal defines
 	outputFile->Printf("#version 130\n"); // OpenGL 3.0 required (because bit operations support needed)
+	outputFile->Printf("#extension GL_ARB_uniform_buffer_object : enable\n");
 	outputFile->Printf("#ifndef M_PI\n#define M_PI 3.14159265358979323846\n#endif\n");
 	outputFile->Printf("#ifndef M_PI2\n#define M_PI2 6.28318530717958647692\n#endif\n");
 
@@ -1150,6 +1158,21 @@ static void GL_ParseProgramUniforms( glsl_program_t *shader )
 	pglUseProgram(GL_NONE);
 }
 
+static void GL_ParseProgramUniformBlocks(glsl_program_t *shader)
+{
+	pglUseProgram(shader->handle);
+
+	shader->uniformBlockLocations[UBT_SKINNINGBLOCK] = 0;
+
+	shader->uniformBlockLocations[UBT_SKINNINGBLOCK] = pglGetUniformBlockIndex(shader->handle, glsl_uniform_block_names[UBT_SKINNINGBLOCK]);
+	if (shader->uniformBlockLocations[UBT_SKINNINGBLOCK] != GL_INVALID_INDEX)
+	{
+		pglUniformBlockBinding(shader->handle, shader->uniformBlockLocations[UBT_SKINNINGBLOCK], UBT_SKINNINGBLOCK);
+	}
+
+	pglUseProgram(GL_NONE);
+}
+
 static void GL_SetDefaultVertexAttribs( glsl_program_t *shader )
 {
 	pglBindAttribLocationARB( shader->handle, ATTR_INDEX_POSITION, "attr_Position" );
@@ -1319,6 +1342,7 @@ static glsl_program_t *GL_CreateUberShader( GLint slot, const char *glname, cons
 		// register shader uniforms
 		GL_ParseProgramVertexAttribs( shader );
 		GL_ParseProgramUniforms( shader );
+		GL_ParseProgramUniformBlocks( shader );
 		GL_ValidateProgram( shader );
 	}
 

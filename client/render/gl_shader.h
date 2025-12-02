@@ -171,6 +171,12 @@ typedef enum
 	UT_UNDEFINED,
 } uniformType_t;
 
+typedef enum
+{
+	UBT_SKINNINGBLOCK,
+	UBT_MAX,
+} uniformBufferType_t;
+
 union unicache_t
 {
 	unicache_t( int v0 ) { iValue[0] = v0; iValue[1] = iValue[2] = iValue[3] = 0; }
@@ -295,6 +301,7 @@ typedef struct glsl_prog_s
 	int			attribs;
 	uniform_t	*uniforms;
 	int			numUniforms;
+	int			uniformBlockLocations[UBT_MAX];
 	std::vector<glsl_prog_include> sourceUnits;
 	struct glsl_prog_s *nextHash;
 } glsl_program_t;

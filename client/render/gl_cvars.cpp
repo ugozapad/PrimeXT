@@ -106,6 +106,7 @@ cvar_t *v_sunshafts;
 cvar_t *v_glows;
 cvar_t *v_posteffects;
 cvar_t *r_postfx_enable;
+cvar_t *r_ubo_skinning;
 
 void R_InitializeConVars()
 {
@@ -117,6 +118,7 @@ void R_InitializeConVars()
 	r_scissor_light_debug = CVAR_REGISTER("r_scissor_light_debug", "0", FCVAR_ARCHIVE);
 	r_recursion_depth = CVAR_REGISTER("gl_recursion_depth", "1", FCVAR_ARCHIVE);
 	r_showlightmaps = CVAR_REGISTER("r_showlightmaps", "0", 0);
+	r_ubo_skinning = CVAR_REGISTER("gl_ubo_skinning", "1", FCVAR_ARCHIVE);
 
 	// setup some engine cvars for custom rendering
 	r_test = CVAR_GET_POINTER("gl_test");
