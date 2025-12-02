@@ -594,6 +594,12 @@ static void GL_FilterCubemapSpecularIBL(mcubemap_t *cubemap)
 						projectionMatrix.CopyToArray(matrixBuffer);
 						u->SetValue(&matrixBuffer[0]);
 						break;
+					case UT_MODELVIEWMATRIX:
+						u->SetValue(&RI->view.worldMatrix);
+						break;
+					case UT_MODELVIEWPROJECTION:
+						u->SetValue(&RI->view.worldProjectionMatrix);
+						break;
 				}
 			}
 			COpenGLUnitCube::GetInstance().Draw();

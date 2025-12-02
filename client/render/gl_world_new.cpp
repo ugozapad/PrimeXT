@@ -2868,6 +2868,12 @@ void R_SetSurfaceUniforms( word hProgram, msurface_t *surface, bool force )
 		case UT_LIGHTNUMS1:
 			u->SetValue( (float)e->lights[4], (float)e->lights[5], (float)e->lights[6], (float)e->lights[7] );
 			break;
+		case UT_MODELVIEWMATRIX:
+			u->SetValue(&RI->view.worldMatrix);
+			break;
+		case UT_MODELVIEWPROJECTION:
+			u->SetValue(&RI->view.worldProjectionMatrix);
+			break;
 		default:
 			ALERT( at_error, "%s: unhandled uniform %s\n", RI->currentshader->name, u->name );
 			break;

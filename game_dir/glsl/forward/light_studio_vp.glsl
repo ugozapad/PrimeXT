@@ -25,6 +25,8 @@ uniform vec4	u_LightOrigin;
 uniform vec2	u_DetailScale;
 uniform vec3	u_ViewOrigin;
 uniform vec3	u_ViewRight;
+uniform mat4	u_ModelViewMatrix;
+uniform mat4	u_ModelViewProjection;
 
 varying vec2	var_TexDiffuse;
 varying vec3	var_LightVec;
@@ -59,8 +61,8 @@ void main( void )
 	vec4 worldpos = boneMatrix * position;
 
 	// transform vertex position into homogenous clip-space
-	gl_Position = gl_ModelViewProjectionMatrix * worldpos;
-	gl_ClipVertex = gl_ModelViewMatrix * worldpos;
+	gl_Position = u_ModelViewProjection * worldpos;
+	//gl_ClipVertex = gl_ModelViewMatrix * worldpos;
 
 	// compute TBN
 	mat3 tbn = ComputeTBN( boneMatrix );

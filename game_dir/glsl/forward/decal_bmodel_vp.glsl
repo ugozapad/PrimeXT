@@ -28,6 +28,8 @@ uniform float	u_LightStyleValues[MAX_LIGHTSTYLES];
 uniform vec3	u_ViewOrigin;	// already in modelspace
 uniform mat4	u_ModelMatrix;
 uniform mat4	u_ReflectMatrix;
+uniform mat4	u_ModelViewMatrix;
+uniform mat4	u_ModelViewProjection;
 
 varying vec4	var_TexDiffuse;
 varying vec3	var_TexLight0;
@@ -51,8 +53,8 @@ void main( void )
 	vec4 position = vec4( attr_Position, 1.0 );
 	vec4 worldpos = u_ModelMatrix * position;
 
-	gl_Position = gl_ModelViewProjectionMatrix * worldpos;
-	gl_ClipVertex = gl_ModelViewMatrix * worldpos;
+	gl_Position = u_ModelViewProjection * worldpos;
+	//gl_ClipVertex = gl_ModelViewMatrix * worldpos;
 
 	// compute TBN
 	mat3 tbn = ComputeTBN( u_ModelMatrix );

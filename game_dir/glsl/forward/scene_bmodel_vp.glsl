@@ -28,6 +28,8 @@ uniform mat4	u_ReflectMatrix;
 uniform vec3	u_ViewOrigin;	// already in modelspace
 uniform vec2	u_DetailScale;
 uniform vec2	u_TexOffset;	// conveyor stuff
+uniform mat4	u_ModelViewMatrix;
+uniform mat4	u_ModelViewProjection;
 
 centroid varying vec2	var_TexDiffuse;
 centroid varying vec3	var_TexLight0;
@@ -60,8 +62,8 @@ void main( void )
 	vec4 position = vec4( attr_Position, 1.0 ); // in object space
 	vec4 worldpos = u_ModelMatrix * position;
 
-	gl_Position = gl_ModelViewProjectionMatrix * worldpos;
-	gl_ClipVertex = gl_ModelViewMatrix * worldpos;
+	gl_Position = u_ModelViewProjection * worldpos;
+	//gl_ClipVertex = gl_ModelViewMatrix * worldpos;
 
 	// compute TBN
 	mat3 tbn = ComputeTBN( u_ModelMatrix );

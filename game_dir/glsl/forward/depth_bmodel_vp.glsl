@@ -16,8 +16,11 @@ GNU General Public License for more details.
 attribute vec3		attr_Position;
 attribute vec2		attr_TexCoord0;
 
+uniform mat4		u_ModelViewMatrix;
+uniform mat4		u_ModelViewProjection;
 uniform mat4		u_ModelMatrix;
 uniform vec2		u_TexOffset;
+
 
 varying vec2		var_TexCoord;	// for alpha-testing
 
@@ -27,8 +30,8 @@ void main( void )
 	vec4 worldpos = u_ModelMatrix * position;
 
 	// transform vertex position into homogenous clip-space
-	gl_Position = gl_ModelViewProjectionMatrix * worldpos;
-	gl_ClipVertex = gl_ModelViewMatrix * worldpos;
+	gl_Position = u_ModelViewProjection * worldpos;
+	//gl_ClipVertex = gl_ModelViewMatrix * worldpos;
 
 	var_TexCoord = attr_TexCoord0 + u_TexOffset;
 }

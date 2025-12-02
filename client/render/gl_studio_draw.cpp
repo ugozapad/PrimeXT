@@ -3755,6 +3755,12 @@ void CStudioModelRenderer :: DrawSingleMesh( CSolidEntry *entry, bool force, boo
 		case UT_LIGHTTHRESHOLD:
 			u->SetValue( tr.light_threshold );
 			break;
+		case UT_MODELVIEWMATRIX:
+			u->SetValue( &RI->view.worldMatrix );
+			break;
+		case UT_MODELVIEWPROJECTION:
+			u->SetValue( &RI->view.worldProjectionMatrix );
+			break;
 		default:
 			ALERT( at_error, "%s: unhandled uniform %s\n", RI->currentshader->name, u->name );
 			break;

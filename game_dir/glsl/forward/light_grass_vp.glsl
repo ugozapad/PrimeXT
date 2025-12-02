@@ -27,6 +27,8 @@ uniform vec3	u_GrassParams;
 uniform vec4	u_LightOrigin;
 uniform vec3	u_ViewOrigin;
 uniform float	u_RealTime;
+uniform mat4	u_ModelViewMatrix;
+uniform mat4	u_ModelViewProjection;
 
 varying vec2	var_TexDiffuse;
 varying vec3	var_LightVec;
@@ -60,9 +62,9 @@ void main( void )
 	}
 
 	vec4 worldpos = u_ModelMatrix * position;
-	gl_Position = gl_ModelViewProjectionMatrix * worldpos;
+	gl_Position = u_ModelViewProjection * worldpos;
 	var_TexDiffuse = GetTexCoordsForVertex( int( attr_Normal.w ));
-	gl_ClipVertex = gl_ModelViewMatrix * worldpos;
+	//gl_ClipVertex = gl_ModelViewMatrix * worldpos;
 
 #if defined( LIGHT_SPOT )
 	var_ProjCoord = ( Mat4Texture( -0.5 ) * u_LightViewProjMatrix ) * worldpos;

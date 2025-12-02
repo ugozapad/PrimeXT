@@ -852,7 +852,13 @@ void R_SetGrassUniforms( word hProgram, grass_t *grass )
 			break;
 		case UT_GRASSPARAMS:
 			u->SetValue( m_flGrassFadeStart, m_flGrassFadeDist, m_flGrassFadeEnd );
-			break;			
+			break;
+		case UT_MODELVIEWMATRIX:
+			u->SetValue(&RI->view.worldMatrix);
+			break;
+		case UT_MODELVIEWPROJECTION:
+			u->SetValue(&RI->view.worldProjectionMatrix);
+			break;
 		default:
 			ALERT( at_error, "%s: unhandled uniform %s\n", RI->currentshader->name, u->name );
 			break;
