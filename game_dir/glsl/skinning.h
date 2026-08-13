@@ -27,12 +27,15 @@ GNU General Public License for more details.
 attribute vec4		attr_BoneIndexes;
 attribute vec4		attr_BoneWeights;
 
+layout(std140) uniform SkinningBlock
+{
 #if defined( STUDIO_BONES_MATRICES )
-uniform vec4		u_BonesArray[MAXSTUDIOBONES*3];
+	vec4		u_BonesArray[MAXSTUDIOBONES*3];
 #else
-uniform vec4		u_BoneQuaternion[MAXSTUDIOBONES];
-uniform vec3		u_BonePosition[MAXSTUDIOBONES];
+	vec4		u_BoneQuaternion[MAXSTUDIOBONES];
+	vec4		u_BonePosition[MAXSTUDIOBONES];
 #endif
+};
 
 #if defined( STUDIO_BONES_MATRICES )
 mat4 Mat4FromVec4Array( int boneIndex, float weight )
@@ -101,17 +104,17 @@ mat4 ComputeSkinningMatrix( void )
 	if( flTotal < 1.0 ) flWeight0 += 1.0 - flTotal;	// compensate rounding error
 
 	// compute hardware skinning with boneweighting
-	mat4 boneMatrix = Mat4FromOriginQuat( u_BoneQuaternion[boneIndex0], u_BonePosition[boneIndex0] ) * flWeight0;
-	if( boneIndex1 != -1 ) boneMatrix += Mat4FromOriginQuat( u_BoneQuaternion[boneIndex1], u_BonePosition[boneIndex1] ) * flWeight1;
-	if( boneIndex2 != -1 ) boneMatrix += Mat4FromOriginQuat( u_BoneQuaternion[boneIndex2], u_BonePosition[boneIndex2] ) * flWeight2;
-	if( boneIndex3 != -1 ) boneMatrix += Mat4FromOriginQuat( u_BoneQuaternion[boneIndex3], u_BonePosition[boneIndex3] ) * flWeight3;
+	mat4 boneMatrix = Mat4FromOriginQuat( u_BoneQuaternion[boneIndex0], u_BonePosition[boneIndex0].xyz ) * flWeight0;
+	if( boneIndex1 != -1 ) boneMatrix += Mat4FromOriginQuat( u_BoneQuaternion[boneIndex1], u_BonePosition[boneIndex1].xyz ) * flWeight1;
+	if( boneIndex2 != -1 ) boneMatrix += Mat4FromOriginQuat( u_BoneQuaternion[boneIndex2], u_BonePosition[boneIndex2].xyz ) * flWeight2;
+	if( boneIndex3 != -1 ) boneMatrix += Mat4FromOriginQuat( u_BoneQuaternion[boneIndex3], u_BonePosition[boneIndex3].xyz ) * flWeight3;
 	return boneMatrix;
 #elif ( MAXSTUDIOBONES == 1 )
-	return Mat4FromOriginQuat( u_BoneQuaternion[0], u_BonePosition[0] );
+	return Mat4FromOriginQuat( u_BoneQuaternion[0], u_BonePosition[0].xyz );
 #else
 	int boneIndex0 = int( attr_BoneIndexes[0] );
 	// compute hardware skinning without boneweighting
-	return Mat4FromOriginQuat( u_BoneQuaternion[boneIndex0], u_BonePosition[boneIndex0] );
+	return Mat4FromOriginQuat( u_BoneQuaternion[boneIndex0], u_BonePosition[boneIndex0].xyz );
 #endif
 }
 #endif

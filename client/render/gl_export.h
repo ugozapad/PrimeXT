@@ -1447,4 +1447,6 @@ EXTERN void (APIENTRY *pglPushDebugGroup)(GLenum source, GLuint id, GLsizei leng
 
 EXTERN void (APIENTRY *pglAlphaToCoverageDitherControlNV)(GLenum mode);
 
+EXTERN void (APIENTRY *pglBindBufferBase)(GLenum target, GLuint index, GLuint buffer);
+
 #endif // GL_EXPORT_H

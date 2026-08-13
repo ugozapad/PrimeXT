@@ -400,9 +400,9 @@ private:
 
 		// GLSL cached arrays
 		Vector4D			m_studioquat[MAXSTUDIOBONES];
-		Vector			m_studiopos[MAXSTUDIOBONES];
+		Vector4D			m_studiopos[MAXSTUDIOBONES];
 		Vector4D			m_weaponquat[MAXSTUDIOBONES];
-		Vector			m_weaponpos[MAXSTUDIOBONES];
+		Vector4D			m_weaponpos[MAXSTUDIOBONES];
 		GLfloat			m_glmatrix[16];
 
 		unsigned int		cached_frame;			// to avoid compute bones more than once per frame
@@ -776,5 +776,7 @@ inline void R_StudioSetBonesExternal( const cl_entity_t *ent, const Vector pos[]
 {
 	g_StudioRenderer.StudioSetBonesExternal( ent, pos, ang );
 }
+
+extern GLuint g_skinningUBO;
 
 #endif// GL_STUDIO_H

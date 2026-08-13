@@ -110,5 +110,6 @@ extern cvar_t *v_sunshafts;
 extern cvar_t *v_glows;
 extern cvar_t *v_posteffects;
 extern cvar_t *r_postfx_enable;
+extern cvar_t *r_ubo_skinning;
 
 #endif//R_CVARS_H
